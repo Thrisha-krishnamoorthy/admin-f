@@ -55,7 +55,7 @@
         document.addEventListener('DOMContentLoaded', fetchOrders);
 
         function fetchOrders() {
-            fetch('http://localhost:5001/orders')
+            fetch('https://admin-f-2.onrender.com/orders')
                 .then(response => response.json())
                 .then(orders => {
                     const tbody = document.getElementById('ordersTableBody');
