@@ -99,7 +99,7 @@
             const orderId = selectElement.closest('tr').cells[0].textContent;
             const newStatus = selectElement.value;
             
-            fetch(`http://localhost:5001/orders/${orderId}/status`, {
+            fetch(`https://admin-f-2.onrender.com/orders${orderId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
