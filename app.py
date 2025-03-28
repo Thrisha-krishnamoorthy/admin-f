@@ -4,6 +4,7 @@ from db_config import db_config
 from flask_cors import CORS
 import bcrypt
 from mysql.connector import Error
+import os
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
@@ -366,4 +367,5 @@ def update_product(product_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port, debug=True)
