@@ -158,88 +158,10 @@ function checkAuth() {
     }
 }
 
-// ✅ Load Orders from Storage
-// ✅ Fetch Orders from API Instead of LocalStorage
-async function loadOrdersFromStorage() {
-    try {
-        let response = await fetch("https://admin-f-2.onrender.com/orders");
-        if (!response.ok) throw new Error("Failed to fetch orders");
 
-        let orders = await response.json();  // ✅ Parse JSON response
 
-        let table = document.getElementById("ordersTable");
-        if (table) {
-            let tbody = table.querySelector("tbody");
-            tbody.innerHTML = "";
 
-            orders.forEach((order, index) => {
-                let row = `<tr data-index="${index}" data-order-id="${order.id}">
-                    <td>${order.id}</td>
-                    <td>${order.customer}</td>
-                    <td class="editable-status">
-                        <span class="status-text">${order.status}</span>
-                        <span class="edit-icon">✏️</span>
-                    </td>
-                    <td>${order.total}</td>
-                    <td>${order.products}</td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
 
-            attachStatusEditListeners();
-        }
-    } catch (error) {
-        console.error("Error loading orders:", error);
-    }
-}
-
-// ✅ Edit Order Status and Send to Backend
-function attachStatusEditListeners() {
-    document.querySelectorAll(".editable-status .edit-icon").forEach(icon => {
-        icon.addEventListener("click", function () {
-            let parent = this.closest(".editable-status");
-            let textElement = parent.querySelector(".status-text");
-            let row = parent.closest("tr");
-            let orderId = row.dataset.orderId;
-
-            let dropdown = document.createElement("select");
-            dropdown.innerHTML = `<option value="Pending">Pending</option>
-                                  <option value="Shipped">Shipped</option>
-                                  <option value="Delivered">Delivered</option>`;
-            dropdown.value = textElement.textContent;
-
-            dropdown.addEventListener("change", async function () {
-                textElement.textContent = dropdown.value;
-                parent.replaceChild(textElement, dropdown);
-
-                // ✅ Send Updated Status to Backend
-                await updateOrderStatus(orderId, dropdown.value);
-            });
-
-            parent.replaceChild(dropdown, textElement);
-            dropdown.focus();
-        });
-    });
-}
-
-// ✅ Update Order Status in Backend
-async function updateOrderStatus(orderId, newStatus) {
-    try {
-        let response = await fetch(`https://admin-f-2.onrender.com/orders/${orderId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: newStatus })
-        });
-
-        if (!response.ok) throw new Error("Failed to update order status");
-        console.log(`Order ${orderId} updated to ${newStatus}`);
-    } catch (error) {
-        console.error("Error updating order status:", error);
-    }
-}
-
-// ✅ Load Orders on Page Load
-document.addEventListener("DOMContentLoaded", loadOrdersFromStorage);
 
 
 // ✅ Load Products from Backend
