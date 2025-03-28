@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Admin Panel</h2>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="orders.html">Orders</a></li>
+                </ul>
+            </nav>
+            <button id="logoutBtn">Logout</button>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="orders-container">
+                <h2>Orders List</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Delivery Type</th>
+                            <th>Delivery Address</th>
+                            <th>Status</th>
+                            <th>Total Price</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Item Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Orders will be dynamically populated here -->
+                    </tbody>
+                </table>
+                <a href="dashboard.html" class="back-btn">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Fetch orders when page loads
+        document.addEventListener('DOMContentLoaded', fetchOrders);
+
+        function fetchOrders() {
+            fetch('http://localhost:5001/orders')
+                .then(response => response.json())
+                .then(orders => {
+                    const tbody = document.getElementById('ordersTableBody');
+                    tbody.innerHTML = '';
+                    
+                    orders.forEach(order => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${order.order_id}</td>
+                            <td>${order.customer_name}</td>
+                            <td>${order.email}</td>
+                            <td>${order.phone}</td>
+                            <td>${order.delivery_type}</td>
+                            <td>${order.delivery_address}</td>
+                            <td>
+                                <span onclick="toggleStatusDropdown(this)">${order.order_status}</span>
+                                <select onchange="updateStatus(this)" style="display: none;">
+                                    <option value="pending" ${order.order_status === 'pending' ? 'selected' : ''}>Pending</option>
+                                    
+                                    <option value="shipped" ${order.order_status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="delivered" ${order.order_status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                </select>
+                            </td>
+                            <td>₹${order.total_price}</td>
+                            <td>${order.product_name}</td>
+                            <td>${order.quantity}</td>
+                            <td>₹${order.item_price}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => console.error('Error fetching orders:', error));
+        }
+
+        function toggleStatusDropdown(element) {
+            const dropdown = element.nextElementSibling;
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateStatus(selectElement) {
+            const orderId = selectElement.closest('tr').cells[0].textContent;
+            const newStatus = selectElement.value;
+            
+            fetch(`http://localhost:5001/orders/${orderId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    selectElement.previousElementSibling.textContent = newStatus;
+                    selectElement.style.display = 'none';
+                } else {
+                    alert('Failed to update status');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+                alert('Failed to update status');
+            });
+        }
+    </script>
+</body>
+</html>

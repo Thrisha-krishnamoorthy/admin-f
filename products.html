@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Admin Panel</h2>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="orders.html">Orders</a></li>
+                </ul>
+            </nav>
+            <button id="logoutBtn">Logout</button>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="products-container">
+                <h1>Products</h1>
+                <button id="addProductBtn" class="add-product-btn">+ Add Product</button>
+                <a href="dashboard.html" class="back-btn">Back to Dashboard</a>
+
+                <table id="productTable">
+                    <thead>
+                        <tr>
+                            <th>Product Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Products will be loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+<!-- Add Product Modal -->
+<div id="addProductModal" class="modal-backdrop" style="display: none;">
+    <div class="add-product-modal">
+        <h2>Add New Product</h2>
+        <form id="addProductForm">
+            
+            <input type="text" id="name" style="height: 20px;width: 500px;margin-left: 150px;" placeholder="enter name of the product" required>
+
+            
+            <textarea id="description" style="height: 20px;width: 500px;margin-left: 150px;" placeholder="enter product description"></textarea>
+
+            
+            <input type="number" id="price" step="0.01" style="height: 20px;width: 500px;margin-left: 150px; "placeholder="enter product price" required>
+
+           
+            <input type="text" id="image_url" style="height: 20px;width: 500px;margin-left: 150px;"placeholder="enter product image url" required>
+
+           
+           
+            <select id="category" style="height: 20px;width: 500px;margin-left: 150px;" placeholder="select category" required>
+                <option value="Pastries">Pastries</option>
+                <option value="Artisan breads">Artisan Breads</option>
+                <option value="Cookies & Treats">Cookies & Treats</option>
+            </select>
+            
+            <input type="number" id="quantity" style="height: 20px;width: 500px;margin-left: 150px;"value="0" required placeholder="enter quantity" >
+
+            <div class="form-buttons">
+                <button type="submit" class="save-btn" id="addProductBtn">Add Product</button>
+                <button type="button" class="cancel-btn" onclick="closeAddProductForm()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+            
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
