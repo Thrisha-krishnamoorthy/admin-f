@@ -69,7 +69,7 @@ function login() {
     };
 
     // Send POST request to backend
-    fetch('http://localhost:5001/login-admin', {
+    fetch('https://admin-f-2.onrender.com/login-admin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ function registerAdmin() {
     };
 
     // Send POST request to backend
-    fetch('http://localhost:5001/register-admin', {
+    fetch('https://admin-f-2.onrender.com/register-admin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -219,7 +219,7 @@ function loadProductsFromBackend() {
     const table = document.getElementById("productTable").querySelector("tbody");
     table.innerHTML = "<tr><td colspan='5' style='text-align: center;'>Loading products...</td></tr>";
 
-    fetch('http://localhost:5001/products')
+    fetch('https://admin-f-2.onrender.com/products')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -565,7 +565,7 @@ function updateOrderStatus(index, status) {
 
 // Function to save product to backend
 function saveProductToBackend(product) {
-    fetch('http://localhost:5001/products', {
+    fetch('https://admin-f-2.onrender.com/products', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -596,7 +596,7 @@ function updateProductInBackend(productId, updatedProduct) {
         row.style.opacity = '0.5';
     }
 
-    return fetch(`http://localhost:5001/products/${productId}`, {
+    return fetch(`https://admin-f-2.onrender.com/products/${productId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -626,7 +626,7 @@ function updateProductInBackend(productId, updatedProduct) {
 
 // Function to delete product from backend
 function deleteProductFromBackend(productId) {
-    return fetch(`http://localhost:5001/products/${productId}`, {
+    return fetch(`https://admin-f-2.onrender.com/products/${productId}`, {
         method: 'DELETE'
     })
     .then(response => {
@@ -682,7 +682,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const newProduct = { name, description, price, image_url, category, quantity, status };
 
         try {
-            const response = await fetch("http://127.0.0.1:5001/products", {
+            const response = await fetch("https://admin-f-2.onrender.com/products", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -767,7 +767,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const password = document.getElementById('adminPassword').value;
 
             try {
-                const response = await fetch('http://localhost:5001/register-admin', {
+                const response = await fetch('https://admin-f-2.onrender.com/register-admin', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
