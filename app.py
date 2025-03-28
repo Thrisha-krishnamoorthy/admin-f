@@ -5,16 +5,25 @@ from flask_cors import CORS
 import bcrypt
 from mysql.connector import Error
 import os
+import logging
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def get_db_connection():
     try:
+        logger.info("Attempting to connect with config: %s", {k: v for k, v in db_config.items() if k != 'password'})  # Log config without password
         connection = mysql.connector.connect(**db_config)
+        logger.info("Database connection successful")
         return connection
     except mysql.connector.Error as err:
-        print(f"Error connecting to database: {err}")
+        logger.error("Database connection error: %s", err)
+        logger.error("Error code: %s", err.errno)
+        logger.error("Error message: %s", err.msg)
         return None
 
 @app.route('/products', methods=['GET'])
@@ -33,6 +42,7 @@ def get_products():
     finally:
         cursor.close()
         connection.close()
+
 @app.route('/register-admin', methods=['POST'])
 def register_admin():
     data = request.get_json()
@@ -116,6 +126,7 @@ def login_admin():
         cursor.close()
         connection.close()
         return jsonify({"error": "Invalid password"}), 401
+
 @app.route('/products', methods=['POST'])
 def add_product():
     connection = get_db_connection()
@@ -161,6 +172,7 @@ def add_product():
     finally:
         cursor.close()
         connection.close()
+
 @app.route('/orders', methods=['GET'])
 def get_orders():
     connection = get_db_connection()
@@ -199,6 +211,7 @@ def get_orders():
     finally:
         cursor.close()
         connection.close()
+
 @app.route('/update_status', methods=['PUT'])
 def update_order_status():
     """Update order status to 'shipped' or 'delivered' in MySQL"""
@@ -230,7 +243,6 @@ def update_order_status():
     finally:
         cursor.close()
         connection.close()
-
 
 @app.route('/products/<int:product_id>', methods=['DELETE'])
 def delete_product(product_id):
@@ -363,8 +375,6 @@ def update_product(product_id):
     finally:
         cursor.close()
         connection.close()
-
-
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
